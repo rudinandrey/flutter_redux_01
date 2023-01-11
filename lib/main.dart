@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-enum Actions { Increment, SetName, AddName }
+enum Actions { Increment, SetName, AddName, Test }
 
 class ReducerAction {
   Actions action;
@@ -38,6 +38,8 @@ AppStore counterReducer(AppStore state, dynamic action) {
     state.name = "";
     return state;
   }
+
+  log("Return the same state");
 
   return state;
 }
@@ -122,7 +124,22 @@ class _MyHomePageState extends State<MyHomePage> {
           }, converter: (store) {
             return () => store.dispatch(ReducerAction(
                 action: Actions.SetName, payload: myController.text));
-          })
+          }),
+          StoreConnector<AppStore, VoidCallback>(
+            builder: (context, vm) {
+              return ElevatedButton(
+                onPressed: () {
+                  vm();
+                },
+                child: Text("Test"),
+              );
+            },
+            converter: (store) {
+              return () => store.dispatch(
+                    ReducerAction(action: Actions.Test),
+                  );
+            },
+          )
         ],
       ),
       floatingActionButton: StoreConnector<AppStore, VoidCallback>(
